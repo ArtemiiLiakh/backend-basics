@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="/lab1">Home</a>
+    <a href="/">Home</a>
 
     <?php
         $book_id = $_GET["id"];
