@@ -7,7 +7,7 @@
 </head>
 <body>
     <?php 
-        $connection = mysqli_connect('mysql_db', 'root', 'root', 'Library');        
+        $connection = mysqli_connect('mysql_db', 'root', 'root', 'library');        
 
         if ($connection) {
             echo "Mysql connection established <br>";
@@ -16,6 +16,9 @@
             die ("Mysql connection not established");
         }
     ?>
+
+    <a href="/info.php">Info</a>
+    <a href="/search/searchBook.html">Search book</a>
 
     <h4>Users</h4>
     <table>
@@ -75,7 +78,7 @@
                         books_items.innerHTML += `
                         <tr>
                             <td>${book.id}</td>  
-                            <td>${book.title}</td>  
+                            <td><a href="/book?id=${book.id}">${book.title}</a></td>  
                             <td>${book.author}</td>  
                             <td>${book.publication_year}</td>  
                             <td>

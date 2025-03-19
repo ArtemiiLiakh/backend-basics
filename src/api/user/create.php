@@ -3,7 +3,7 @@
 
     $full_name = $user['full_name'];
 
-    $connection = mysqli_connect("mysql_db", "root", "root", "Library");
+    $connection = mysqli_connect("mysql_db", "root", "root", "library");
     $connection->query("INSERT INTO `users`(full_name) VALUES('".$full_name."')");
     $connection->close(); 
     

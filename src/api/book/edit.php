@@ -6,7 +6,7 @@
     $author = $book['author'];
     $year = $book['year'];
     
-    $connection = mysqli_connect("mysql_db", "root", "root", database: "Library");
+    $connection = mysqli_connect("mysql_db", "root", "root", database: "library");
     $connection->query("UPDATE `books` SET title='".$title."', author='".$author."', publication_year=".$year." WHERE id=".$book_id);
     $connection->close();
     

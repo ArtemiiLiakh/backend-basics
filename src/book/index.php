@@ -11,7 +11,7 @@
     <?php
         $book_id = $_GET["id"];
 
-        $connection = mysqli_connect('mysql_db', 'root', 'root', "Library");
+        $connection = mysqli_connect('mysql_db', 'root', 'root', "library");
 
         $book = $connection->query("SELECT * FROM `books` WHERE id = $book_id")->fetch_assoc();
         $orders = $connection->query("SELECT users.full_name name
@@ -27,7 +27,7 @@
         
         echo "<p>Owned by: ";
         while ($order = $orders->fetch_array(MYSQLI_ASSOC)) {
-            echo  $order['name'];
+            echo  $order['name'].', ';
         }
 
         echo "</p>";

@@ -5,7 +5,7 @@
     $author = $book['author'];
     $year = $book['year'];
 
-    $connection = mysqli_connect("mysql_db", "root", "root", database: "Library");
+    $connection = mysqli_connect("mysql_db", "root", "root", database: "library");
     $connection->query("INSERT INTO `books`(title, author, publication_year) VALUES('".$title."', '".$author."', ".$year.")");
     $connection->close(); 
     

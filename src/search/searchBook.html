@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/">Home</a>
+
+    <h3>Search book</h3>
+
+    <form id="search-books">
+        <label for="search">Search</label>
+        <input id="search_input" type="text" name="search" placeholder="Search">
+        
+        <label for="publication_from">Publication year from</label>
+        <input id="publication_from_input" type="number" name="publication_from">
+
+        <label for="publication_to">Publication year to</label>
+        <input id="publication_to_input" type="number" name="publication_to">
+        <button class="submit-btn">Search</button>
+    </form>
+
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publication Year</th>
+        </thead>
+
+        <tbody id="books-items"></tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('search-books');
+        const search = document.getElementById('search_input');
+        const publicationFromYear = document.getElementById('publication_from_input');
+        const publicationToYear = document.getElementById('publication_to_input');
+        const books_items = document.getElementById('books-items'); 
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const url = `/api/book/search.php?search=${search.value}&publicationFromYear=${publicationFromYear.value}&publicationToYear=${publicationToYear.value}`;
+
+            const res = await fetch(url);
+
+            if (res.status !== 200) return;
+
+            books_items.innerHTML = '';
+            for (const book of await res.json()) {
+                books_items.innerHTML += `
+                <tr>
+                    <td>${book.id}</td>  
+                    <td><a href="/book?id=${book.id}">${book.title}</a></td>  
+                    <td>${book.author}</td>  
+                    <td>${book.publication_year}</td>  
+                </tr>
+                `
+            }
+        });
+    </script>
+
+    <style>
+        input {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            display: block;
+            margin-top: 20px;
+        }
+
+        table {
+            margin-top: 50px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+    </style>
+
+</body>
+</html>

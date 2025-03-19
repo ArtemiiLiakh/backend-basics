@@ -1,7 +1,7 @@
 <?php
     $sortBy = $_GET["sortBy"] ?? 'id';
 
-    $connection = mysqli_connect('mysql_db', 'root', 'root', 'Library');
+    $connection = mysqli_connect('mysql_db', 'root', 'root', 'library');
     
     $result = [];
 
@@ -14,4 +14,4 @@
     $connection->close();
 
     echo json_encode($result);
-?>
+?>  
