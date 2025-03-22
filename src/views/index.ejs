@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        .city-button {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather</h1>
+    <p>Select a city to view weather:</p>
+    <a class="city-button" href="/weather/Lviv">Львів</a>
+    <a class="city-button" href="/weather/Sumy">Суми</a>
+    <a class="city-button" href="/weather/Odesa">Одеса</a>
+    <a class="city-button" href="/weather/Kyiv">Київ</a>
+    <a class="city-button" href="/weather/Kharkiv">Харків</a>
+    <a class="city-button" href="/weather/Konotop">Конотоп</a>
+    <button id="weather-by-geo" class="city-button">Моє поточне місце</button>
+
+    <p id="status"></p>
+
+    <script>
+        const locationButton = document.getElementById('weather-by-geo');
+        const locationStatus = document.getElementById('status');
+
+        locationButton.onclick = () => {
+            if (!navigator.geolocation) {
+                locationStatus.textContent = 'Geolocation is not supported by your browser';
+            } else {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    location.href = `/weather?lat=${position.coords.latitude.toFixed(4)}&long=${position.coords.longitude.toFixed(4)}`;
+                }, (error) => {
+                    locationStatus.textContent = 'Unable to get your location';
+                });
+            }
+
+        };
+    </script>
+</body>
+</html>
