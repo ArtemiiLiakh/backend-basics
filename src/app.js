@@ -1,35 +1,38 @@
-const express = require('express');
-const cors = require('cors');
 const path = require('path');
-const { WeatherServiceDI } = require('./di/services/WeatherServiceDI');
+const express = require('express');
+const { BookModel } = require('./db/Books');
 
 const app = express();
-app.set('view engine', 'ejs');
-
-app.use(cors({
-  origin: '*',
-}));
-
-app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-app.get('/', (req, res) => {
-  res.render('index');
+app.get('/', async (req, res) => {
+  const books = await BookModel.find();
+  res.render('books', { books });
 });
 
-app.get('/weather', async (req, res) => {
-  const weatherData = await WeatherServiceDI.getByLocation(req.query.lat, req.query.long);
-  res.render('weather', {
-    weatherData,
-  });
+app.get('/book/:bookId', async (req, res) => {
+  const book = await BookModel.findById(req.params.bookId);
+  res.json(book);
 });
 
-app.get('/weather/:city', async (req, res) => {
-  const weatherData = await WeatherServiceDI.getByCity(req.params.city);
-  res.render('weather', {
-    weatherData,
-  });
+app.post('/books', async (req, res) => {
+  const { title, author, year } = req.body;
+  await BookModel.create({ title, author, year });
+  res.redirect('/');
+});
+
+app.post('/books/:id/update', async (req, res) => {
+  const { title, author, year } = req.body;
+  await BookModel.findByIdAndUpdate(req.params.id, { title, author, year });
+  res.redirect('/');
+});
+
+app.post('/books/:id/delete', async (req, res) => {
+  await BookModel.findByIdAndDelete(req.params.id);
+  res.redirect('/');
 });
 
 module.exports = app;

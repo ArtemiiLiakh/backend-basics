@@ -1,3 +1,3 @@
 module.exports = {
-  API_KEY: process.env.API_KEY,
+  MONGO_URL: process.env.MONGO_URL,
 };

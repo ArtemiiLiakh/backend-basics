@@ -1,0 +1,19 @@
+version: "3.7"
+name: backend-basics
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: booksdb
+    volumes:
+      - ./init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongodb-storage:/data/db
+
+volumes:
+  mongodb-storage:

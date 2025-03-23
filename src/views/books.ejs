@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <script>
+        function addBookRow() {
+            let table = document.getElementById("booksTable");
+            let row = table.insertRow();
+            row.innerHTML = `
+                <td></td>
+                <td><input type="text" id="newTitle"></td>
+                <td><input type="text" id="newAuthor"></td>
+                <td><input type="number" id="newYear"></td>
+                <td></td>
+                <td>
+                    <button onclick="saveNewBook(this)">Save</button>
+                    <button onclick="cancelNewBook(this)">Cancel</button>
+                </td>
+            `;
+        }
+        
+        async function saveNewBook(btn) {
+            let row = btn.parentNode.parentNode;
+            let title = row.querySelector("#newTitle").value;
+            let author = row.querySelector("#newAuthor").value;
+            let year = row.querySelector("#newYear").value;
+            
+            await fetch('/books', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, author, year })
+            });
+            location.reload();
+        }
+        
+        function cancelNewBook(btn) {
+            btn.parentNode.parentNode.remove();
+        }
+        
+        function editBook(btn, id) {
+            let row = btn.parentNode.parentNode;
+            let title = row.children[1].innerText;
+            let author = row.children[2].innerText;
+            let year = row.children[3].innerText;
+            let createdAt = row.children[4].innerText;
+
+            row.innerHTML = `
+                <td><a href="/book/${id}">${id}</a></td>
+                <td><input type="text" id="editTitle" value="${title}"></td>
+                <td><input type="text" id="editAuthor" value="${author}"></td>
+                <td><input type="number" id="editYear" value="${year}"></td>
+                <td>${createdAt}</td>
+                <td>
+                    <button onclick="saveBook(this, '${id}')">Save</button>
+                    <button onclick="cancelEdit(this, '${id}', '${title}', '${author}', '${year}', '${createdAt}')">Cancel</button>
+                </td>
+            `;
+        }
+        
+        async function saveBook(btn, id) {
+            let row = btn.parentNode.parentNode;
+            let title = row.querySelector("#editTitle").value;
+            let author = row.querySelector("#editAuthor").value;
+            let year = row.querySelector("#editYear").value;
+            
+            await fetch(`/books/${id}/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, author, year })
+            });
+            location.reload();
+        }
+        
+        function cancelEdit(btn, id, title, author, year, createdAt) {
+            let row = btn.parentNode.parentNode;
+            row.innerHTML = `
+                <td><a href="/book/${id}">${id}</a></td>
+                <td>${title}</td>
+                <td>${author}</td>
+                <td>${year}</td>
+                <td>${createdAt}</td>
+                <td>
+                    <button onclick="editBook(this, '${id}')">Update</button>
+                    <button onclick="deleteBook(this, '${id}')">Delete</button>
+                </td>
+            `;
+        }
+        
+        async function deleteBook(btn, id) {
+            await fetch(`/books/${id}/delete`, {
+                method: 'POST'
+            });
+            location.reload();
+        }
+    </script>
+</head>
+<body>
+    <h1>Book Management</h1>
+    <button onclick="addBookRow()">Create Book</button>
+    <table border="1" id="booksTable">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Creation Date</th>
+            <th>Actions</th>
+        </tr>
+        <% books.forEach(book => { %>
+            <tr>
+                <td><a href="/book/<%= book._id %>"><%= book._id %></a></td>
+                <td><%= book.title %></td>
+                <td><%= book.author %></td>
+                <td><%= book.year %></td>
+                <td><%= book.createdAt.toISOString().split('T')[0] %></td>
+                <td>
+                    <button onclick="editBook(this, '<%= book._id %>')">Update</button>
+                    <button onclick="deleteBook(this, '<%= book._id %>')">Delete</button>
+                </td>
+            </tr>
+        <% }); %>
+    </table>
+</body>
+</html>
